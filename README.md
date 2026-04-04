@@ -1,8 +1,8 @@
-# VINS-Fusion ROS2
+# VINS-Fusion Implementation in ROS2
 
-VINS-Fusion ported to ROS2 Humble, targeting ARM devices and running inside a Docker container.
+This is a VINS-Fusion implementation using ROS2 Humble
 
-Based on the original [VINS-Fusion](https://github.com/HKUST-Aerial-Robotics/VINS-Fusion) by HKUST Aerial Robotics Group and [VINS-Fusion-ROS2](https://github.com/zinuok/VINS-Fusion-ROS2) by zinuok.
+Based on the original [VINS-Fusion](https://github.com/HKUST-Aerial-Robotics/VINS-Fusion) by HKUST Aerial Robotics Group.
 
 ## Prerequisites
 
@@ -79,6 +79,9 @@ ros2 bag play /workspace/data/<bag_name>
 ```
 
 To convert a ROS1 bag:
+
+Since the bag file provided by ETH is in ros1 format, one should convert them using ```rosbag-convert```.
+
 ```bash
 pip install rosbags
 rosbags-convert data/V1_02_medium.bag --dst data/V1_02_medium_ros2
@@ -87,12 +90,8 @@ rosbags-convert data/V1_02_medium.bag --dst data/V1_02_medium_ros2
 ## Packages
 
 | Package | Description |
-|---|---|
+| --- | --- |
 | `camera_models` | Camera calibration library (pinhole, mei, equidistant, catadioptric) |
 | `vins` | Core VIO estimator |
 | `loop_fusion` | Visual loop closure using DBoW2 + BRIEF |
 | `global_fusion` | GPS/global pose fusion using GeographicLib |
-
-## License
-
-[GPLv3](LICENCE)
