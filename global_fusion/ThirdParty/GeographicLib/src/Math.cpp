@@ -1,12 +1,3 @@
-/**
- * \file Math.cpp
- * \brief Implementation for GeographicLib::Math class
- *
- * Copyright (c) Charles Karney (2015) <charles@karney.com> and licensed
- * under the MIT/X11 License.  For more information, see
- * https://geographiclib.sourceforge.io/
- **********************************************************************/
-
 #include "Math.hpp"
 
 #if defined(_MSC_VER)

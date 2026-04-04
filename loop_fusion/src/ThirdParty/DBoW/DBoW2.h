@@ -1,13 +1,3 @@
-/*
- * File: DBoW2.h
- * Date: November 2011
- * Author: Dorian Galvez-Lopez
- * Description: Generic include file for the DBoW2 classes and
- *   the specialized vocabularies and databases
- * License: see the LICENSE.txt file
- *
- */
-
 /*! \mainpage DBoW2 Library
  *
  * DBoW2 library for C++:

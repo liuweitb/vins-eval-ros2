@@ -1,12 +1,3 @@
-/**
- * File: TemplatedDatabase.h
- * Date: March 2011
- * Author: Dorian Galvez-Lopez
- * Description: templated database of images
- * License: see the LICENSE.txt file
- *
- */
- 
 #ifndef __D_T_TEMPLATED_DATABASE__
 #define __D_T_TEMPLATED_DATABASE__
 

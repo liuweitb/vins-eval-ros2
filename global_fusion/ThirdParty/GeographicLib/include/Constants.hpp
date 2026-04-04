@@ -1,12 +1,3 @@
-/**
- * \file Constants.hpp
- * \brief Header for GeographicLib::Constants class
- *
- * Copyright (c) Charles Karney (2008-2016) <charles@karney.com> and licensed
- * under the MIT/X11 License.  For more information, see
- * https://geographiclib.sourceforge.io/
- **********************************************************************/
-
 #if !defined(GEOGRAPHICLIB_CONSTANTS_HPP)
 #define GEOGRAPHICLIB_CONSTANTS_HPP 1
 

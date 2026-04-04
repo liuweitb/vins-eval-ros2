@@ -1,12 +1,3 @@
-/**
- * \file Geocentric.hpp
- * \brief Header for GeographicLib::Geocentric class
- *
- * Copyright (c) Charles Karney (2008-2016) <charles@karney.com> and licensed
- * under the MIT/X11 License.  For more information, see
- * https://geographiclib.sourceforge.io/
- **********************************************************************/
-
 #if !defined(GEOGRAPHICLIB_GEOCENTRIC_HPP)
 #define GEOGRAPHICLIB_GEOCENTRIC_HPP 1
 

@@ -1,12 +1,3 @@
-/**
- * File: ScoringObject.h
- * Date: November 2011
- * Author: Dorian Galvez-Lopez
- * Description: functions to compute bow scores 
- * License: see the LICENSE.txt file
- *
- */
-
 #ifndef __D_T_SCORING_OBJECT__
 #define __D_T_SCORING_OBJECT__
 

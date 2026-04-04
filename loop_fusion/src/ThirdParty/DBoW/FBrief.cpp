@@ -1,12 +1,3 @@
-/**
- * File: FBrief.cpp
- * Date: November 2011
- * Author: Dorian Galvez-Lopez
- * Description: functions for BRIEF descriptors
- * License: see the LICENSE.txt file
- *
- */
- 
 #include <vector>
 #include <string>
 #include <sstream>

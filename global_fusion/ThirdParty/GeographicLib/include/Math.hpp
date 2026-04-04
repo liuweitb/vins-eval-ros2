@@ -1,12 +1,3 @@
-/**
- * \file Math.hpp
- * \brief Header for GeographicLib::Math class
- *
- * Copyright (c) Charles Karney (2008-2017) <charles@karney.com> and licensed
- * under the MIT/X11 License.  For more information, see
- * https://geographiclib.sourceforge.io/
- **********************************************************************/
-
 // Constants.hpp includes Math.hpp.  Place this include outside Math.hpp's
 // include guard to enforce this ordering.
 #include "Constants.hpp"

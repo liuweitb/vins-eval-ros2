@@ -1,12 +1,3 @@
-/**
- * File: QueryResults.h
- * Date: March, November 2011
- * Author: Dorian Galvez-Lopez
- * Description: structure to store results of database queries
- * License: see the LICENSE.txt file
- *
- */
-
 #ifndef __D_T_QUERY_RESULTS__
 #define __D_T_QUERY_RESULTS__
 

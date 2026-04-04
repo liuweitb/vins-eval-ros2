@@ -1,13 +1,3 @@
-/*
- * File: DVision.h
- * Project: DVision library
- * Author: Dorian Galvez-Lopez
- * Date: October 4, 2010
- * Description: several functions for computer vision
- * License: see the LICENSE.txt file
- *
- */
-
 /*! \mainpage DVision Library
  *
  * DVision library for C++ and OpenCV:

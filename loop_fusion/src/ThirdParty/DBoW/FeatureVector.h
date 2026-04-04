@@ -1,12 +1,3 @@
-/**
- * File: FeatureVector.h
- * Date: November 2011
- * Author: Dorian Galvez-Lopez
- * Description: feature vector
- * License: see the LICENSE.txt file
- *
- */
-
 #ifndef __D_T_FEATURE_VECTOR__
 #define __D_T_FEATURE_VECTOR__
 

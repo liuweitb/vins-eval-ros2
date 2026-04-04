@@ -11,12 +11,22 @@ Based on the original [VINS-Fusion](https://github.com/HKUST-Aerial-Robotics/VIN
 
 ## Build Docker Image
 
+We implemented a docker image for unified development environment.
+
 ```bash
 cd docker
 make build
 ```
 
 ## Run Container
+
+Before executing into the docker container, display access to the master should be enabled using:
+
+```bash
+xhost local:docker
+```
+
+Run the image and execute the container:
 
 ```bash
 ./exec.sh

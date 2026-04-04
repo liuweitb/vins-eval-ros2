@@ -1,12 +1,3 @@
-/**
- * File: FeatureVector.cpp
- * Date: November 2011
- * Author: Dorian Galvez-Lopez
- * Description: feature vector
- * License: see the LICENSE.txt file
- *
- */
-
 #include "FeatureVector.h"
 #include <map>
 #include <vector>

@@ -1,12 +1,3 @@
-/*
- * File: Timestamp.h
- * Author: Dorian Galvez-Lopez
- * Date: March 2009
- * Description: timestamping functions
- * License: see the LICENSE.txt file
- *
- */
-
 #ifndef __D_TIMESTAMP__
 #define __D_TIMESTAMP__
 

@@ -1,12 +1,3 @@
-/**
- * File: QueryResults.cpp
- * Date: March, November 2011
- * Author: Dorian Galvez-Lopez
- * Description: structure to store results of database queries
- * License: see the LICENSE.txt file
- *
- */
-
 #include <iostream>
 #include <fstream>
 #include "QueryResults.h"

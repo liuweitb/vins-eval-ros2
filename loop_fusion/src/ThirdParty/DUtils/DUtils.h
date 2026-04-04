@@ -1,13 +1,3 @@
-/*
- * File: DUtils.h
- * Project: DUtils library
- * Author: Dorian Galvez-Lopez
- * Date: October 6, 2009
- * Description: include file for including all the library functionalities
- * License: see the LICENSE.txt file
- *
- */
-
 /*! \mainpage DUtils Library
  *
  * DUtils library for C++:
