@@ -1,0 +1,15 @@
+[tool.uv.workspace]
+members = [
+    "camera_models",
+    "vins",
+    "loop_fusion",
+    "global_fusion",
+]
+
+[tool.uv]
+dev-dependencies = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "mypy>=1.10",
+    "ruff>=0.4",
+]
