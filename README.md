@@ -1,107 +1,173 @@
-# VINS-Fusion Implementation in ROS2
+# Python VINS-Fusion for ROS2
 
-This is a VINS-Fusion implementation using ROS2 Humble
+This repository contains a Python translation of VINS-Fusion running on ROS2.
 
-Based on the original [VINS-Fusion](https://github.com/HKUST-Aerial-Robotics/VINS-Fusion) by HKUST Aerial Robotics Group.
+The Python ROS2 workspace lives at the repository root and contains four packages:
 
-## Prerequisites
+| ROS2 package | Python project | Description |
+| --- | --- | --- |
+| `vins_camera_models` | `vins-camera-models` | Camera projection models |
+| `vins` | `vins` | Visual-inertial estimator |
+| `vins_loop_fusion` | `vins-loop-fusion` | ORB/BFMatcher loop fusion |
+| `vins_global_fusion` | `vins-global-fusion` | GPS/global pose fusion |
 
-- Docker
-- (optional) A ROS2 bag in ROS2 format
+## Requirements
 
-## Build Docker Image
+- ROS2 with `rclpy`, `cv_bridge`, `tf2_ros`, `sensor_msgs`, `nav_msgs`, and `geometry_msgs`
+- Python 3.10+
+- `uv`
 
-We implemented a docker image for unified development environment.
-
-```bash
-cd docker
-make build
-```
-
-## Run Container
-
-Before executing into the docker container, display access to the master should be enabled using:
+Install `uv` if needed:
 
 ```bash
-xhost local:docker
+curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
-Run the image and execute the container:
+Source ROS2 before building or running:
 
 ```bash
-./exec.sh
+source /opt/ros/jazzy/setup.bash
 ```
 
-Inside the container, the workspace is mounted at `/workspace`.
+Use the ROS2 distro installed on your machine if it is not Jazzy.
 
-## Build Packages
+## Install Python Dependencies
+
+From the repository root:
+
+```bash
+uv sync --link-mode=copy
+```
+
+`--link-mode=copy` avoids uv hardlink warnings when the uv cache and this workspace are on different filesystems.
+
+## Build The ROS2 Python Packages
+
+From the repository root:
 
 ```bash
 colcon build --symlink-install
+```
+
+Then source the overlay:
+
+```bash
 source install/setup.bash
 ```
 
-## Run
+## Run VINS
 
-### EuRoC — stereo + IMU
-
-```bash
-ros2 run vins vins_node /workspace/config/euroc/euroc_stereo_imu_config.yaml
-# optional loop closure
-ros2 run loop_fusion loop_fusion_node /workspace/config/euroc/euroc_stereo_imu_config.yaml
-```
-
-### EuRoC — mono + IMU
+Run the estimator directly:
 
 ```bash
-ros2 run vins vins_node /workspace/config/euroc/euroc_mono_imu_config.yaml
+ros2 run vins vins_node config/euroc/euroc_stereo_imu_config.yaml
 ```
 
-### EuRoC — stereo only
+Or launch it:
 
 ```bash
-ros2 run vins vins_node /workspace/config/euroc/euroc_stereo_config.yaml
+ros2 launch vins vins.launch.py \
+  config_path:=config/euroc/euroc_stereo_imu_config.yaml
 ```
 
-### Visualisation
+Other useful configs:
 
 ```bash
-ros2 launch vins vins_rviz.launch.xml
+ros2 run vins vins_node config/euroc/euroc_mono_imu_config.yaml
+ros2 run vins vins_node config/euroc/euroc_stereo_config.yaml
+ros2 run vins vins_node config/realsense_d435i/realsense_stereo_imu_config.yaml
 ```
 
-### KITTI Odometry (stereo)
+## Run Loop Fusion
+
+Start VINS first, then in another terminal:
 
 ```bash
-ros2 run vins kitti_odom_test /workspace/config/kitti_odom/kitti_config00-02.yaml /path/to/kitti/sequences/00/
+cd /media/weiliu/SSD/code/vins_fusion_ros2
+source /opt/ros/jazzy/setup.bash
+source install/setup.bash
+
+ros2 run vins_loop_fusion loop_fusion_node config/euroc/euroc_stereo_imu_config.yaml
 ```
 
-### KITTI GPS Fusion (stereo + GPS)
+The loop fusion node subscribes to:
+
+- `/vins_estimator/odometry`
+- `/cam0/image_raw`
+
+It publishes:
+
+- `/loop_fusion/path`
+
+## Run Global GPS Fusion
+
+Start VINS first, then in another terminal:
 
 ```bash
-ros2 run vins kitti_gps_test /workspace/config/kitti_raw/kitti_10_03_config.yaml /path/to/kitti/2011_10_03_drive_0027_sync/
-ros2 run global_fusion global_fusion_node
+cd /media/weiliu/SSD/code/vins_fusion_ros2
+source /opt/ros/jazzy/setup.bash
+source install/setup.bash
+
+ros2 run vins_global_fusion global_fusion_node
 ```
 
-## Play a ROS2 Bag
+The global fusion node subscribes to:
+
+- `/vins_estimator/odometry`
+- `/gps`
+
+It publishes:
+
+- `/global_fusion/odometry`
+- `/global_fusion/path`
+
+Topic names can be overridden with ROS parameters:
 
 ```bash
-ros2 bag play /workspace/data/<bag_name>
+ros2 run vins_global_fusion global_fusion_node --ros-args \
+  -p gps_topic:=/gps \
+  -p vio_topic:=/vins_estimator/odometry \
+  -p global_odom_topic:=/global_fusion/odometry \
+  -p global_path_topic:=/global_fusion/path
 ```
 
-To convert a ROS1 bag:
+## Play A ROS2 Bag
 
-Since the bag file provided by ETH is in ros1 format, one should convert them using ```rosbag-convert```.
+In a terminal with the ROS environment sourced:
 
 ```bash
-pip install rosbags
-rosbags-convert data/V1_02_medium.bag --dst data/V1_02_medium_ros2
+ros2 bag play /path/to/bag
 ```
 
-## Packages
+For EuRoC-style data, make sure the bag topics match the config file, for example:
 
-| Package | Description |
-| --- | --- |
-| `camera_models` | Camera calibration library (pinhole, mei, equidistant, catadioptric) |
-| `vins` | Core VIO estimator |
-| `loop_fusion` | Visual loop closure using DBoW2 + BRIEF |
-| `global_fusion` | GPS/global pose fusion using GeographicLib |
+- `/imu0`
+- `/cam0/image_raw`
+- `/cam1/image_raw`
+
+## Convert A ROS1 Bag
+
+If your dataset is still in ROS1 bag format:
+
+```bash
+uv pip install rosbags
+rosbags-convert /path/to/input.bag --dst /path/to/output_ros2
+```
+
+Then play the converted ROS2 bag:
+
+```bash
+ros2 bag play /path/to/output_ros2
+```
+
+## Run Without Colcon
+
+For quick Python-only checks, use uv from the repository root:
+
+```bash
+uv run vins_node config/euroc/euroc_stereo_imu_config.yaml
+uv run loop_fusion_node config/euroc/euroc_stereo_imu_config.yaml
+uv run global_fusion_node
+```
+
+For normal ROS2 usage, prefer the `colcon build` and `ros2 run` workflow above.
