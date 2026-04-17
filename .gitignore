@@ -2,4 +2,4 @@ build/
 install/
 log/
 data/
-out/
+.codex
