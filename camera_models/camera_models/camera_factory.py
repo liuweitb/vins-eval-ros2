@@ -1,15 +1,14 @@
-import yaml
 from .camera_base import CameraBase
 from .pinhole_camera import PinholeCamera
 from .mei_camera import MeiCamera
 from .equidistant_camera import EquidistantCamera
+from .yaml_utils import load_camera_yaml
 
 
 class CameraFactory:
     @staticmethod
     def generate_camera_from_yaml(path: str) -> CameraBase:
-        with open(path) as f:
-            data = yaml.safe_load(f)
+        data = load_camera_yaml(path)
         model = data.get("model_type", "PINHOLE").upper()
         if model in ("PINHOLE", "PINHOLE_FULL"):
             return PinholeCamera.from_yaml(path)

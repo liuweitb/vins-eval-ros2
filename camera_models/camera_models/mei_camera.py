@@ -1,7 +1,7 @@
 import numpy as np
 import cv2
-import yaml
 from .camera_base import CameraBase
+from .yaml_utils import load_camera_yaml
 
 
 class MeiCamera(CameraBase):
@@ -27,24 +27,28 @@ class MeiCamera(CameraBase):
 
     @classmethod
     def from_yaml(cls, path: str) -> "MeiCamera":
-        with open(path) as f:
-            data = yaml.safe_load(f)
-        ip = data["intrinsic_parameters"]
+        data = load_camera_yaml(path)
+        ip = data.get("intrinsic_parameters", data.get("projection_parameters", {}))
+        mp = data.get("mirror_parameters", {})
         dp = data.get("distortion_parameters", {})
         return cls(
             width=data["image_width"],
             height=data["image_height"],
-            xi=ip["xi"],
-            fx=ip["gamma1"], fy=ip["gamma2"],
-            cx=ip["u0"], cy=ip["v0"],
+            xi=ip.get("xi", mp.get("xi", 0.0)),
+            fx=ip.get("gamma1", ip.get("fx")),
+            fy=ip.get("gamma2", ip.get("fy")),
+            cx=ip.get("u0", ip.get("cx")),
+            cy=ip.get("v0", ip.get("cy")),
             k1=dp.get("k1", 0.0), k2=dp.get("k2", 0.0),
             p1=dp.get("p1", 0.0), p2=dp.get("p2", 0.0),
         )
 
     def lift_projective(self, p: np.ndarray) -> np.ndarray:
         """Unproject 2D pixel to unit 3D bearing vector."""
-        mx = (p[0] - self.cx) / self.fx
-        my = (p[1] - self.cy) / self.fy
+        mx_d = (p[0] - self.cx) / self.fx
+        my_d = (p[1] - self.cy) / self.fy
+        mx = mx_d
+        my = my_d
         # Inverse distortion (iterative Newton)
         for _ in range(20):
             r2 = mx**2 + my**2
@@ -52,6 +56,8 @@ class MeiCamera(CameraBase):
             delta = 1 + self.k1*r2 + self.k2*r4
             dx = 2*self.p1*mx*my + self.p2*(r2 + 2*mx**2)
             dy = self.p1*(r2 + 2*my**2) + 2*self.p2*mx*my
+            mx = (mx_d - dx) / delta
+            my = (my_d - dy) / delta
         # Lift to unit sphere
         xi = self.xi
         r2 = mx**2 + my**2

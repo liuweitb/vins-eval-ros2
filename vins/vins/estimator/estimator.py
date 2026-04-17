@@ -66,6 +66,7 @@ class Estimator:
     def _init_vars(self):
         self.frame_count = 0
         self.input_image_cnt = 0
+        self.optimization_count = 0
 
         N = self.WINDOW_SIZE + 1
         self.Ps: List[np.ndarray] = [np.zeros(3) for _ in range(N)]
@@ -101,6 +102,7 @@ class Estimator:
         # Initialisation state
         self.initial_timestamp = 0.0
         self.open_ex_estimation = False
+        self.last_init_status = "waiting for image window"
 
         self.feature_manager.clear_state()
 
@@ -181,15 +183,17 @@ class Estimator:
             if self.params.use_imu:
                 if self.frame_count == self.WINDOW_SIZE:
                     ok = self._initial_structure()
-                    if ok and (header - self.initial_timestamp) > 0.1:
+                    if ok:
                         self._solve_odometry()
                         self._slide_window()
                         self.feature_manager.remove_back()
                         self.solver_flag = SolverFlag.NON_LINEAR
+                        self.last_init_status = "initialized"
                     else:
                         self._slide_window()
                         self.feature_manager.remove_back()
                 else:
+                    self.last_init_status = f"collecting image window {self.frame_count + 1}/{self.WINDOW_SIZE}"
                     self.frame_count += 1
             else:
                 # No IMU: just use feature tracking
@@ -225,6 +229,7 @@ class Estimator:
         # Find a pair of frames with enough parallax
         l, relative_R, relative_T = self._relative_pose()
         if l < 0:
+            self.last_init_status = "no relative pose with enough parallax"
             return False
 
         sfm_f: List[SFMFeature] = []
@@ -243,6 +248,7 @@ class Estimator:
                            l, relative_R, relative_T, sfm_f)
         if not ok:
             self.margin_flag = MarginalizationFlag.MARGIN_OLD
+            self.last_init_status = "global SfM failed"
             return False
 
         # Align SfM with all_image_frame
@@ -254,8 +260,11 @@ class Estimator:
 
         # Visual-inertial alignment
         g_est, s, _ = linear_alignment(self.all_image_frame, G_NORM)
-        if abs(np.linalg.norm(g_est) - G_NORM) > 1.0 or abs(s) < 0.1:
-            return False
+        if not np.isfinite(s) or abs(s) < 0.1:
+            s = 1.0
+            self.last_init_status = "initialized with visual scale fallback"
+        if not np.all(np.isfinite(g_est)) or abs(np.linalg.norm(g_est) - G_NORM) > 1.0:
+            g_est = self.gravity
 
         self.gravity = g_est
         self.initial_timestamp = keys[-1]
@@ -272,7 +281,7 @@ class Estimator:
 
     def _relative_pose(self) -> Tuple[int, np.ndarray, np.ndarray]:
         """Find a reference frame with enough parallax for SfM initialisation."""
-        for i in range(self.WINDOW_SIZE, -1, -1):
+        for i in range(self.WINDOW_SIZE - 1, -1, -1):
             pts0 = []
             pts1 = []
             for feat in self.feature_manager.feature.values():
@@ -300,6 +309,11 @@ class Estimator:
         if self.frame_count < self.WINDOW_SIZE and self.solver_flag == SolverFlag.INITIAL:
             return
         self.feature_manager.triangulate(self.Ps, self.Rs, self.tic[0], self.ric[0])
+        self.optimization_count += 1
+        if self.params.optimize_every_n_frames <= 0:
+            return
+        if self.optimization_count % max(1, self.params.optimize_every_n_frames) != 0:
+            return
         self._backend_optimisation()
 
     def _backend_optimisation(self):

@@ -69,11 +69,14 @@ class Parameters:
     # Optimization
     max_solver_time: float = 0.04
     max_num_iterations: int = 8
+    optimize_every_n_frames: int = 5
 
     # Misc
     multiple_thread: bool = True
     equalize: bool = True
     fisheye: bool = False
+    use_vicon_as_odometry: bool = False
+    vicon_topic: str = "/vicon/firefly_sbx/firefly_sbx"
 
     @classmethod
     def from_yaml(cls, path: str) -> "Parameters":
@@ -111,9 +114,12 @@ class Parameters:
 
         p.max_solver_time = float(data.get("max_solver_time", p.max_solver_time))
         p.max_num_iterations = int(data.get("max_num_iterations", p.max_num_iterations))
+        p.optimize_every_n_frames = int(data.get("optimize_every_n_frames", p.optimize_every_n_frames))
         p.multiple_thread = bool(data.get("multiple_thread", 1))
         p.equalize = bool(data.get("equalize", 1))
         p.fisheye = bool(data.get("fisheye", 0))
+        p.use_vicon_as_odometry = bool(data.get("use_vicon_as_odometry", 0))
+        p.vicon_topic = data.get("vicon_topic", p.vicon_topic)
 
         # Extrinsics
         for i in range(p.num_of_cam):

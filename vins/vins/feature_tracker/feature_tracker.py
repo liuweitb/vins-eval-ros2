@@ -20,6 +20,7 @@ class FeatureTracker:
         self.prev_pts: np.ndarray | None = None   # (N, 2)
         self.prev_ids: List[int] = []
         self.prev_track_cnt: List[int] = []
+        self._camera = None
 
         self._lk_params = dict(
             winSize=(21, 21),
@@ -140,11 +141,20 @@ class FeatureTracker:
         for k, fid in enumerate(ids):
             u, v = float(pts[k, 0]), float(pts[k, 1])
             vx, vy = float(velocity[k, 0]), float(velocity[k, 1])
+            xyz = self._lift_point(np.array([u, v], dtype=np.float64))
             # Observation vector matches C++ format: [x, y, z=1, u, v, 1, vx, vy]
-            obs = np.array([u, v, 1.0, u, v, 1.0, vx, vy])
+            obs = np.array([xyz[0], xyz[1], xyz[2], u, v, 1.0, vx, vy])
             result[fid] = [obs]
         return result
 
     def set_camera(self, camera) -> None:
         """Inject camera model for undistortion if needed."""
         self._camera = camera
+
+    def _lift_point(self, point: np.ndarray) -> np.ndarray:
+        if self._camera is None:
+            return np.array([point[0], point[1], 1.0], dtype=np.float64)
+        bearing = np.asarray(self._camera.lift_projective(point), dtype=np.float64)
+        if abs(bearing[2]) < 1e-8:
+            return bearing
+        return bearing / bearing[2]

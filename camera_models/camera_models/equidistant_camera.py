@@ -1,7 +1,7 @@
 import numpy as np
 import cv2
-import yaml
 from .camera_base import CameraBase
+from .yaml_utils import load_camera_yaml
 
 
 class EquidistantCamera(CameraBase):
@@ -25,9 +25,8 @@ class EquidistantCamera(CameraBase):
 
     @classmethod
     def from_yaml(cls, path: str) -> "EquidistantCamera":
-        with open(path) as f:
-            data = yaml.safe_load(f)
-        ip = data["intrinsic_parameters"]
+        data = load_camera_yaml(path)
+        ip = data.get("intrinsic_parameters", data.get("projection_parameters", {}))
         dp = data.get("distortion_parameters", {})
         return cls(
             width=data["image_width"],

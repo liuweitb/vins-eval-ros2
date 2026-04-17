@@ -80,11 +80,6 @@ class GlobalSFM:
                     self._triangulate(i, quat_to_rot(q_arr[i]), T_arr[i],
                                       j, quat_to_rot(q_arr[j]), T_arr[j], sfm_f)
 
-        # Bundle adjustment
-        ok = self._bundle_adjustment(frame_num, q_arr, T_arr, sfm_f)
-        if not ok:
-            return False
-
         for i in range(frame_num):
             q[i] = q_arr[i]
             T[i] = T_arr[i]

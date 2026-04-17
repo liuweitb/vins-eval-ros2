@@ -40,7 +40,7 @@ def motion_from_essential(E: np.ndarray,
 
 def solve_relative_pose(pts0: np.ndarray,
                         pts1: np.ndarray,
-                        threshold: float = 1.0
+                        threshold: float = 1.0 / 460.0
                         ) -> Tuple[bool, np.ndarray, np.ndarray]:
     """
     Estimate relative pose from normalised point correspondences.
