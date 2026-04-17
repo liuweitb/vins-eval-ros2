@@ -99,11 +99,14 @@ System::System(const string &strVocFile, const string &strSettingsFile, const eS
     }
 
     node = fsSettings["loopClosing"];
+    bool activeLC = false; // Modified: Forced to false to disable loop closing/map reuse for VIO comparison
+#if 0
     bool activeLC = true;
     if(!node.empty())
     {
         activeLC = static_cast<int>(fsSettings["loopClosing"]) != 0;
     }
+#endif
 
     mStrVocabularyFilePath = strVocFile;
 

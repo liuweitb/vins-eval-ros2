@@ -1,5 +1,7 @@
 # ORB-SLAM3
 
+> **Note:** This repository is an **Ubuntu 20.04 supported version** of ORB-SLAM3. Additionally, we have **disabled the map reuse and relocalization functions** to compare the front-end part of this algorithm directly with pure VIO algorithms such as Open_VINS.
+
 ### V1.0, December 22th, 2021
 **Authors:** Carlos Campos, Richard Elvira, Juan J. Gómez Rodríguez, [José M. M. Montiel](http://webdiis.unizar.es/~josemari/), [Juan D. Tardos](http://webdiis.unizar.es/~jdtardos/).
 

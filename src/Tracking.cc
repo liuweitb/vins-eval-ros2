@@ -3608,9 +3608,13 @@ void Tracking::UpdateLocalKeyFrames()
 
 bool Tracking::Relocalization()
 {
+    // Modified: Disable Relocalization entirely for pure VIO behavior
+    return false;
+#if 0
     Verbose::PrintMess("Starting relocalization", Verbose::VERBOSITY_NORMAL);
     // Compute Bag of Words Vector
     mCurrentFrame.ComputeBoW();
+
 
     // Relocalization is performed when tracking is lost
     // Track Lost: Query KeyFrame Database for keyframe candidates for relocalisation
@@ -3773,7 +3777,7 @@ bool Tracking::Relocalization()
         cout << "Relocalized!!" << endl;
         return true;
     }
-
+#endif
 }
 
 void Tracking::Reset(bool bLocMap)
