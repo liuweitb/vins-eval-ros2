@@ -1,15 +1,10 @@
 # Python VINS-Fusion for ROS2
 
-This repository contains a Python translation of VINS-Fusion running on ROS2.
+This repository contains a Python implementation of VINS-Fusion running on ROS2. The evaluation script is included in the ```scrip/``` folder. Further detailed are described in our [presentation](https://youtu.be/Gr1ZjeuqnIY).
 
-The Python ROS2 workspace lives at the repository root and contains four packages:
+![vins fusion demo](./imgs/vinsfusion_demo%20-%2001.gif)
 
-| ROS2 package | Python project | Description |
-| --- | --- | --- |
-| `vins_camera_models` | `vins-camera-models` | Camera projection models |
-| `vins` | `vins` | Visual-inertial estimator |
-| `vins_loop_fusion` | `vins-loop-fusion` | ORB/BFMatcher loop fusion |
-| `vins_global_fusion` | `vins-global-fusion` | GPS/global pose fusion |
+![Project Poster](./imgs/Poster.pptx.jpg)
 
 ## Requirements
 
