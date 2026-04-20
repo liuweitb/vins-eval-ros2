@@ -3,6 +3,7 @@
 This repository contains a Python implementation of VINS-Fusion running on ROS2. The evaluation script is included in the ```scrip/``` folder. Further detailed are described in our [presentation](https://youtu.be/Gr1ZjeuqnIY).
 
 ![vins fusion demo](./imgs/vinsfusion_demo%20-%2001.gif)
+*Demo of vins fusion, visualized in RViz2 using EuRoC MAV dataset (Vicon Room1 Medium).*
 
 ![Project Poster](./imgs/Poster.pptx.jpg)
 
@@ -72,51 +73,6 @@ source install/setup.bash
 
 ros2 run vins_loop_fusion loop_fusion_node config/euroc/euroc_stereo_imu_config.yaml
 ```
-
-The loop fusion node subscribes to:
-
-- `/vins_estimator/odometry`
-- `/cam0/image_raw`
-
-It publishes:
-
-- `/loop_fusion/path`
-
-## Run Global GPS Fusion
-
-Start VINS first, then in another terminal:
-
-```bash
-cd /media/weiliu/SSD/code/vins_fusion_ros2
-source /opt/ros/jazzy/setup.bash
-source install/setup.bash
-
-ros2 run vins_global_fusion global_fusion_node
-```
-
-The global fusion node subscribes to:
-
-- `/vins_estimator/odometry`
-- `/gps`
-
-It publishes:
-
-- `/global_fusion/odometry`
-- `/global_fusion/path`
-
-## Play ROS2 Bags
-
-In a terminal with the ROS environment sourced:
-
-```bash
-ros2 bag play /path/to/bag
-```
-
-For EuRoC-style data, make sure the bag topics match the config file, for example:
-
-- `/imu0`
-- `/cam0/image_raw`
-- `/cam1/image_raw`
 
 ## Convert ROS1 Bags
 
