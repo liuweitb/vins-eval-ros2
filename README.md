@@ -90,3 +90,17 @@ ros2 bag play /path/to/output_ros2
 ```
 
 For normal ROS2 usage, prefer the `colcon build` and `ros2 run` workflow above.
+
+## Baseline Systems
+
+In addition to our ROS2-based implementation of VINS-Fusion, we have evaluated and replicated several baseline systems for comprehensive comparison:
+
+- **OpenVINS**
+- **ORB-SLAM3**
+- **ORB-SLAM3_VIO**: To isolate the effect of loop closure and map reuse in optimization-based pipelines, we constructed an odometry-only variant of ORB-SLAM3. In this variant, loop detection and relocalization functionalities are explicitly disabled by modifying the source code such that map reuse detection and relocalization routines always return `false`. As a result, the system operates purely as a visual-inertial odometry estimator without global pose graph optimization. This controlled modification enables a direct comparison between full SLAM and odometry-only configurations under identical front-end and optimization back-end structures. For full details and the modified implementation, please refer to the `orb_slam3_vio` branch.
+
+### Evaluation
+
+The specific scripts and calculation procedures for evaluating trajectory metrics, such as Absolute Trajectory Error (ATE) and Relative Pose Error (RPE), are located in the `eval` folder of the `main` branch.
+
+
