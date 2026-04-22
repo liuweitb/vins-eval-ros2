@@ -97,7 +97,7 @@ In addition to our ROS2-based implementation of VINS-Fusion, we have evaluated a
 
 - **OpenVINS**
 - **ORB-SLAM3**
-- **ORB-SLAM3_VIO**: To isolate the effect of loop closure and map reuse in optimization-based pipelines, we constructed an odometry-only variant of ORB-SLAM3. In this variant, loop detection and relocalization functionalities are explicitly disabled by modifying the source code such that map reuse detection and relocalization routines always return `false`. As a result, the system operates purely as a visual-inertial odometry estimator without global pose graph optimization. This controlled modification enables a direct comparison between full SLAM and odometry-only configurations under identical front-end and optimization back-end structures. For full details and the modified implementation, please refer to the `orb_slam3_vio` branch.
+- **ORB-SLAM3_VIO**: To isolate the effect of loop closure and map reuse in optimization-based pipelines, we constructed an odometry-only variant of ORB-SLAM3. In this variant, loop detection and relocalization functionalities are explicitly disabled by modifying the source code such that map reuse detection and relocalization routines always return `false`. As a result, the system operates purely as a visual-inertial odometry estimator without global pose graph optimization. This controlled modification enables a direct comparison between full SLAM and odometry-only configurations under identical front-end and optimization back-end structures. For full details and the modified implementation, please refer to the [`orb_slam3_vio` branch](https://github.com/liuweitb/vins-fusion-py-ros2/tree/orb_slam3_vio).
 
 ### Evaluation
 
